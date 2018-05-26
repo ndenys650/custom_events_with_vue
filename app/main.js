@@ -1,3 +1,5 @@
+const EventBus = new Vue();
+
 const inputComponent = {
   // include v-model for two way data binding on what gets entered into input field
   template: `<input v-model="input" :placeholder="placeholder" @keyup.enter="monitorEnterKey" class="input is-small" type="text" />`,
@@ -13,7 +15,7 @@ const inputComponent = {
     // create first custom event for listening to enter key from input
     // retrieves information from v-model and creates a new timestamp
     monitorEnterKey() {
-      this.$emit('add-note', {
+      EventBus.$emit('add-note', {
         note: this.input,
         timestamp: new Date().toLocaleString()
       });
@@ -39,5 +41,8 @@ new Vue({
       this.notes.push(event.note);
       this.timestamps.push(event.timestamp);
     }
+  },
+  created() {
+    EventBus.$on('add-note', event => this.addNote(event));
   }
 })
